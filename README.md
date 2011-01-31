@@ -23,8 +23,8 @@ synopsis
     var cradle = require('cradle');
     var db = new(cradle.Connection)().database('starwars');
 
-    db.get('vador', function (err, doc) {
-        doc.name; // 'Darth Vador'
+    db.get('vader', function (err, doc) {
+        doc.name; // 'Darth Vader'
         assert.equal(doc.force, 'dark');
     });
 
@@ -60,7 +60,7 @@ _Defaults to `127.0.0.1:5984`_
 
 Note that you can also use `cradle.setup` to set a global configuration:
 
-    cradle.setup({host: 'http://living-room.couch',
+    cradle.setup({host: 'living-room.couch',
                   options: {cache: true, raw: false}});
     var c = new(cradle.Connection),
        cc = new(cradle.Connection)('173.45.66.92');
@@ -74,7 +74,7 @@ Note that you can also use `cradle.setup` to set a global configuration:
 
 ### fetching a document _(GET)_ ###
 
-    db.get('vador', function (err, doc) {
+    db.get('vader', function (err, doc) {
         sys.puts(doc);
     });
 
@@ -82,7 +82,7 @@ Note that you can also use `cradle.setup` to set a global configuration:
 
 Cradle is also able to fetch multiple documents if you have a list of ids, just pass an array to `get`:
 
-    db.get(['luke', 'vador'], function (err, doc) { ... });
+    db.get(['luke', 'vader'], function (err, doc) { ... });
 
 ### Querying a view ###
 
@@ -99,7 +99,7 @@ In general, document creation is done with the `save()` method, while updating i
 
 #### creating with an id _(PUT)_ ####
 
-    db.save('vador', {
+    db.save('vader', {
         name: 'darth', force: 'dark'
     }, function (err, res) {
         // Handle response
@@ -176,6 +176,20 @@ To remove a document, you call the `remove()` method, passing the latest documen
 
 If `remove` is called without a revision, and the document was recently fetched from the database, it will attempt to use the cached document's revision, providing caching is enabled.
 
+Connecting with authentication and SSL
+--------------------------------------
+
+    var connection = new(cradle.Connection)('https://couch.io', 443, {
+        auth: { username: 'john', password: 'fha82l' }
+    });
+
+or
+
+    var connection = new(cradle.Connection)('couch.io', 443, {
+        secure: true,
+        auth: { username: 'john', password: 'fha82l' }
+    });
+
 Changes API
 -----------
 
@@ -221,6 +235,7 @@ Other API methods
 - `stats()`: Statistics overview
 - `activeTasks()`: Get list of currently active tasks
 - `uuids(count)`: Get _count_ list of UUIDs
+- `replicate(options)`: Replicate a database.
 
 ### database level ###
 
@@ -231,4 +246,5 @@ Other API methods
 - `allBySeq()`: Get all documents by sequence
 - `compact()`: Compact database
 - `viewCleanup()`: Cleanup old view data
+- `replicate(target, options)`: Replicate this database to `target`.
 
